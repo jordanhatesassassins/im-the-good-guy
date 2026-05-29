@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robin Consulting — Website Cost Calculator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #192040;
+      --orange: #e85d26;
+      --amber:  #f97316;
+      --bg:     #eef1f6;
+      --card:   #ffffff;
+      --text:   #1e293b;
+      --muted:  #64748b;
+      --border: #dde3ec;
+      --green:  #059669;
+      --radius: 14px;
+      --sh:     0 1px 4px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+      --sh-md:  0 4px 12px rgba(0,0,0,.1), 0 1px 4px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .hdr {
+      position: sticky; top: 0; z-index: 200;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .hdr-brand { display: flex; align-items: center; gap: 12px; }
+    .hdr-logo {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; color: #fff; flex-shrink: 0;
+      letter-spacing: -1px;
+    }
+    .hdr-name { color: #fff; font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .hdr-sub  { color: rgba(255,255,255,.55); font-size: 11px; }
+    .hdr-price { text-align: right; }
+    .hdr-price-lbl { color: rgba(255,255,255,.5); font-size: 10px; text-transform: uppercase; letter-spacing: .6px; }
+    .hdr-price-amt {
+      color: var(--amber); font-size: 26px; font-weight: 900;
+      transition: color .2s, transform .15s;
+      display: inline-block;
+    }
+    .hdr-price-amt.bump { transform: scale(1.08); }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 80px; }
+
+    /* ── CLIENT BANNER ── */
+    .client-bar {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--sh); padding: 14px 20px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .client-bar label { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .client-bar input {
+      flex: 1; border: 2px solid var(--border); border-radius: 8px;
+      padding: 6px 12px; font-size: 15px; font-weight: 600; color: var(--text);
+      outline: none; transition: border-color .15s;
+      font-family: inherit;
+    }
+    .client-bar input:focus { border-color: var(--orange); }
+    .client-bar input::placeholder { color: #b0bac5; font-weight: 400; }
+
+    /* ── SECTION CARD ── */
+    .sec {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--sh); margin-bottom: 14px; overflow: hidden;
+    }
+    .sec-hdr {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      background: #f7f9fb;
+    }
+    .sec-num {
+      width: 27px; height: 27px; border-radius: 50%;
+      background: var(--navy); color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sec-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .sec-desc  { font-size: 11.5px; color: var(--muted); }
+    .sec-body  { padding: 18px 20px; }
+
+    /* ── QUESTION ── */
+    .q { margin-bottom: 22px; }
+    .q:last-child { margin-bottom: 0; }
+    .q-lbl {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .q-hint { font-size: 11.5px; color: var(--muted); font-weight: 400; margin-top: 1px; margin-bottom: 8px; }
+
+    /* ── OPTION CARDS ── */
+    .opts { display: grid; gap: 7px; }
+
+    .opt { position: relative; }
+    .opt input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .opt-lbl {
+      display: flex; align-items: flex-start; gap: 11px;
+      padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px;
+      cursor: pointer; transition: border-color .12s, background .12s;
+      background: #fff; user-select: none;
+    }
+    .opt-lbl:hover { border-color: #c9d3e0; background: #fafbfd; }
+    .opt input:checked + .opt-lbl {
+      border-color: var(--orange); background: #fff8f5;
+    }
+
+    /* radio circle */
+    .ind-r {
+      width: 17px; height: 17px; border-radius: 50%;
+      border: 2px solid var(--border); flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .12s, background .12s;
+    }
+    .opt input:checked + .opt-lbl .ind-r { border-color: var(--orange); background: var(--orange); }
+    .ind-r::after {
+      content: ''; width: 5px; height: 5px;
+      border-radius: 50%; background: #fff; display: none;
+    }
+    .opt input:checked + .opt-lbl .ind-r::after { display: block; }
+
+    /* checkbox square */
+    .ind-c {
+      width: 17px; height: 17px; border-radius: 4px;
+      border: 2px solid var(--border); flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .12s, background .12s;
+    }
+    .opt input:checked + .opt-lbl .ind-c { border-color: var(--orange); background: var(--orange); }
+    .ind-c::after {
+      content: '✓'; color: #fff; font-size: 10px; font-weight: 800; display: none;
+    }
+    .opt input:checked + .opt-lbl .ind-c::after { display: block; }
+
+    .opt-body { flex: 1; min-width: 0; }
+    .opt-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .opt-desc { font-size: 11.5px; color: var(--muted); margin-top: 1px; line-height: 1.4; }
+    .opt-price {
+      font-size: 12.5px; font-weight: 800; color: var(--orange);
+      white-space: nowrap; padding-left: 10px; margin-top: 2px; flex-shrink: 0;
+    }
+    .opt-price.incl { color: var(--green); }
+
+    /* ── DIVIDER ── */
+    .div { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block; padding: 1px 7px; border-radius: 20px;
+      font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+      vertical-align: middle;
+    }
+    .badge-pop { background: #fef3c7; color: #92400e; }
+    .badge-incl { background: #dcfce7; color: #166534; }
+
+    /* ── INFO BOX ── */
+    .info {
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;
+      padding: 9px 13px; font-size: 11.5px; color: #1e40af; margin-top: 4px;
+    }
+
+    /* ── CONDITIONAL BLOCK ── */
+    .cond { display: none; }
+    .cond.on { display: block; }
+
+    /* ── SUMMARY CARD ── */
+    .summary {
+      background: var(--navy); color: #fff;
+      border-radius: var(--radius); padding: 24px;
+      margin-top: 20px; box-shadow: var(--sh-md);
+    }
+    .summary-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 18px; gap: 12px; flex-wrap: wrap;
+    }
+    .summary-title { font-size: 17px; font-weight: 800; }
+    .summary-client { font-size: 12px; opacity: .55; margin-top: 3px; }
+
+    /* Line items */
+    .items { list-style: none; }
+    .item {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: 13px;
+    }
+    .item:last-child { border-bottom: none; }
+    .item-name { opacity: .82; flex: 1; }
+    .item-price { font-weight: 700; color: var(--amber); white-space: nowrap; }
+    .item-price.item-incl { color: #86efac; font-size: 11px; }
+    .item-cat {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
+      opacity: .45; padding-top: 14px; padding-bottom: 2px;
+    }
+
+    /* Total bar */
+    .total-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 16px; padding-top: 16px;
+      border-top: 2px solid rgba(255,255,255,.18);
+    }
+    .total-lbl { font-size: 15px; font-weight: 700; }
+    .total-amt { font-size: 36px; font-weight: 900; color: var(--amber); line-height: 1; }
+
+    /* Monthly */
+    .mo-bar {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      display: none;
+    }
+    .mo-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; opacity: .45; margin-bottom: 4px; }
+    .mo-amt { font-size: 20px; font-weight: 800; color: #86efac; }
+    .mo-items { margin-top: 6px; }
+    .mo-item {
+      display: flex; justify-content: space-between; font-size: 12px;
+      padding: 4px 0; opacity: .75;
+    }
+    .mo-item-price { color: #86efac; font-weight: 600; }
+
+    /* Payment plans */
+    .plans { margin-top: 20px; }
+    .plans-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; opacity: .45; margin-bottom: 10px; }
+    .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .plan {
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px; padding: 12px 10px; text-align: center;
+    }
+    .plan-name { font-size: 10px; font-weight: 700; opacity: .5; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 5px; }
+    .plan-amt  { font-size: 17px; font-weight: 800; color: var(--amber); }
+    .plan-desc { font-size: 9.5px; opacity: .45; margin-top: 4px; }
+
+    /* Notes */
+    .notes-wrap { margin-top: 20px; }
+    .notes-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; opacity: .45; margin-bottom: 7px; }
+    .notes-ta {
+      width: 100%; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px; color: rgba(255,255,255,.85); font-size: 13px;
+      padding: 10px 13px; resize: vertical; min-height: 70px; font-family: inherit;
+      outline: none;
+    }
+    .notes-ta::placeholder { color: rgba(255,255,255,.25); }
+    .notes-ta:focus { border-color: rgba(255,255,255,.3); }
+
+    /* Buttons */
+    .btns { display: flex; gap: 9px; margin-top: 18px; flex-wrap: wrap; }
+    .btn {
+      padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; border: none; font-family: inherit; transition: opacity .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary { background: var(--orange); color: #fff; }
+    .btn-ghost { background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); }
+    .btn-reset { background: rgba(255,255,255,.06); color: rgba(255,255,255,.5); font-size: 12px; }
+
+    /* ── EMPTY STATE ── */
+    .empty { opacity: .4; font-style: italic; font-size: 13px; padding: 8px 0; }
+
+    /* ── PRINT ── */
+    @media print {
+      .hdr { position: static; }
+      body { background: #fff; }
+      .btns, .client-bar { display: none; }
+      .sec { box-shadow: none; border: 1px solid #ddd; }
+      .summary { background: #1a2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    @media (max-width: 560px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .total-amt { font-size: 28px; }
+      .hdr-price-amt { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════ HEADER ════════════════════════════ -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo">R</div>
+    <div>
+      <div class="hdr-name">Robin Consulting</div>
+      <div class="hdr-sub">Website Cost Calculator</div>
+    </div>
+  </div>
+  <div class="hdr-price">
+    <div class="hdr-price-lbl">Estimated Project Cost</div>
+    <span class="hdr-price-amt" id="hdr-amt">$0</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════ WRAP ════════════════════════════ -->
+<div class="wrap">
+
+  <!-- Client Name -->
+  <div class="client-bar">
+    <label for="client-name">Client</label>
+    <input type="text" id="client-name" placeholder="Business name (optional)" maxlength="80">
+  </div>
+
+  <!-- ── 1. WEBSITE TYPE ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">1</div>
+      <div>
+        <div class="sec-title">Website Type</div>
+        <div class="sec-desc">What kind of website does this business need?</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="site-type" id="t-info" value="info"
+              data-price="1500" data-label="Informational Website (Base)">
+            <label class="opt-lbl" for="t-info">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Informational / Brochure Website</span>
+                <span class="opt-desc">Pages about the business, services, and contact info. No transactions. Perfect for establishing a professional online presence.</span>
+              </span>
+              <span class="opt-price">from $1,500</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="site-type" id="t-order" value="order"
+              data-price="2800" data-label="Online Ordering Website (Base)">
+            <label class="opt-lbl" for="t-order">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Online Ordering Website</span>
+                <span class="opt-desc">Customers place orders for pickup or delivery — ideal for restaurants, cafes, food businesses, and similar service businesses.</span>
+              </span>
+              <span class="opt-price">from $2,800</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="site-type" id="t-ecom" value="ecom"
+              data-price="4000" data-label="E-Commerce Store (Base)">
+            <label class="opt-lbl" for="t-ecom">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">E-Commerce Store</span>
+                <span class="opt-desc">Full online shop where customers browse and buy products. Built on Shopify (primary) or Wix (alternative).</span>
+              </span>
+              <span class="opt-price">from $4,000</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. GOALS & AMBITION ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">2</div>
+      <div>
+        <div class="sec-title">Goals & Ambition Level</div>
+        <div class="sec-desc">How do you see this website working for your business?</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="ambition" id="a-mvp" value="mvp"
+              data-price="0" data-label="Minimum Viable — Just Get Online">
+            <label class="opt-lbl" for="a-mvp">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Minimum Viable — Just Get Online</span>
+                <span class="opt-desc">I need a clean, professional presence. Nothing fancy — just legitimate and functional. Enough to be found and taken seriously.</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="ambition" id="a-grow" value="grow"
+              data-price="800" data-label="Growth Mode">
+            <label class="opt-lbl" for="a-grow">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Growth Mode <span class="badge badge-pop">Popular</span></span>
+                <span class="opt-desc">I want to compete and grow. The website should attract new customers, support marketing, and position us above local competition.</span>
+              </span>
+              <span class="opt-price">+$800</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="ambition" id="a-full" value="full"
+              data-price="1800" data-label="Full Competitive Build">
+            <label class="opt-lbl" for="a-full">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Full Competitive Build</span>
+                <span class="opt-desc">The website is a core business driver — lead generation, brand authority, customer acquisition. I want to dominate my market.</span>
+              </span>
+              <span class="opt-price">+$1,800</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. DESIGN & SIZE ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">3</div>
+      <div>
+        <div class="sec-title">Design & Size</div>
+        <div class="sec-desc">Look, feel, and scope of the build</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-lbl">Design approach</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="design" id="d-tmpl" value="tmpl"
+              data-price="0" data-label="Template-Based Design">
+            <label class="opt-lbl" for="d-tmpl">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Template / Theme-Based</span>
+                <span class="opt-desc">We customize a professional template to match your brand. Fast to build, polished result — great for most small businesses.</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="design" id="d-cust" value="cust"
+              data-price="600" data-label="Custom-Designed Layout">
+            <label class="opt-lbl" for="d-cust">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Custom-Designed Layout</span>
+                <span class="opt-desc">Layouts designed specifically for your business. Stands apart from competitors using standard templates.</span>
+              </span>
+              <span class="opt-price">+$600</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="design" id="d-prem" value="prem"
+              data-price="1200" data-label="Premium Custom Design">
+            <label class="opt-lbl" for="d-prem">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Premium Custom Design</span>
+                <span class="opt-desc">High-end bespoke design — custom animations, advanced layouts, distinctive brand identity. For businesses where the site IS the brand.</span>
+              </span>
+              <span class="opt-price">+$1,200</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div class="q">
+        <div class="q-lbl">Number of pages</div>
+        <div class="q-hint">Count each unique page: Home, About, Services, Gallery, Contact, etc.</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="pages" id="p-5" value="1-5"
+              data-price="0" data-label="1–5 Pages">
+            <label class="opt-lbl" for="p-5">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">1 – 5 Pages</span>
+                <span class="opt-desc">Home, About, Services, Contact — the essentials</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="pages" id="p-10" value="6-10"
+              data-price="400" data-label="6–10 Pages">
+            <label class="opt-lbl" for="p-10">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">6 – 10 Pages</span>
+                <span class="opt-desc">Individual service pages, team page, FAQ, blog, etc.</span>
+              </span>
+              <span class="opt-price">+$400</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="pages" id="p-20" value="11-20"
+              data-price="800" data-label="11–20 Pages">
+            <label class="opt-lbl" for="p-20">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">11 – 20 Pages</span>
+                <span class="opt-desc">Larger site with dedicated content sections, multiple service areas, portfolio</span>
+              </span>
+              <span class="opt-price">+$800</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="pages" id="p-21" value="21+"
+              data-price="1500" data-label="21+ Pages">
+            <label class="opt-lbl" for="p-21">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">21+ Pages</span>
+                <span class="opt-desc">Large-scale site — we'll define scope in detail together</span>
+              </span>
+              <span class="opt-price">+$1,500</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 4. FEATURES & FUNCTIONALITY ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">4</div>
+      <div>
+        <div class="sec-title">Features & Functionality</div>
+        <div class="sec-desc">What does the website need to do? Check everything that applies.</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-lbl">Standard inclusions <span class="badge badge-incl">Every site</span></div>
+        <div class="info">Mobile-responsive design · Contact form · Social media links · Google Maps embed · SSL certificate · Basic meta SEO setup · Hosting handoff guide</div>
+      </div>
+
+      <hr class="div">
+
+      <div class="q">
+        <div class="q-lbl">Additional features — check all that apply</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="checkbox" id="f-book" data-price="350" data-label="Booking / Appointment Calendar">
+            <label class="opt-lbl" for="f-book">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Booking / Appointment Calendar</span>
+                <span class="opt-desc">Customers can book appointments or reservations directly on the site</span>
+              </span>
+              <span class="opt-price">+$350</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-chat" data-price="150" data-label="Live Chat Integration">
+            <label class="opt-lbl" for="f-chat">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Live Chat Integration</span>
+                <span class="opt-desc">Real-time chat widget for customer questions and support</span>
+              </span>
+              <span class="opt-price">+$150</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-blog" data-price="200" data-label="Blog / News Section">
+            <label class="opt-lbl" for="f-blog">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Blog / News Section</span>
+                <span class="opt-desc">Publish updates, articles, and news to drive traffic and build SEO over time</span>
+              </span>
+              <span class="opt-price">+$200</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-gall" data-price="150" data-label="Photo Gallery / Portfolio">
+            <label class="opt-lbl" for="f-gall">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Photo Gallery / Portfolio</span>
+                <span class="opt-desc">Showcase work, products, or space with a filterable, lightbox gallery</span>
+              </span>
+              <span class="opt-price">+$150</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-vid" data-price="100" data-label="Video Integration">
+            <label class="opt-lbl" for="f-vid">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Video Integration</span>
+                <span class="opt-desc">Embedded video content (YouTube, Vimeo, or hosted) displayed throughout the site</span>
+              </span>
+              <span class="opt-price">+$100</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-revw" data-price="100" data-label="Reviews / Testimonials Section">
+            <label class="opt-lbl" for="f-revw">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Reviews / Testimonials Section</span>
+                <span class="opt-desc">Display customer reviews or integrate with Google Reviews feed</span>
+              </span>
+              <span class="opt-price">+$100</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-news" data-price="150" data-label="Email Newsletter Signup">
+            <label class="opt-lbl" for="f-news">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Email Newsletter Signup</span>
+                <span class="opt-desc">Build a mailing list with an integrated signup form (Mailchimp, Klaviyo, etc.)</span>
+              </span>
+              <span class="opt-price">+$150</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-memb" data-price="500" data-label="Members / Client Portal">
+            <label class="opt-lbl" for="f-memb">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Members / Client Portal</span>
+                <span class="opt-desc">Password-protected area for clients or members (accounts, resources, documents, content)</span>
+              </span>
+              <span class="opt-price">+$500</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="f-soc" data-price="100" data-label="Social Media Feed Integration">
+            <label class="opt-lbl" for="f-soc">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Social Media Feed Integration</span>
+                <span class="opt-desc">Live Instagram or Facebook feed displayed on the site to keep content fresh</span>
+              </span>
+              <span class="opt-price">+$100</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─ Online Ordering Extras ─ -->
+      <div id="ord-block" class="cond">
+        <hr class="div">
+        <div class="q">
+          <div class="q-lbl">Online Ordering — Fulfillment</div>
+          <div class="opts">
+
+            <div class="opt">
+              <input type="radio" name="ord-type" id="o-pickup" value="pickup"
+                data-price="0" data-label="Pickup Only">
+              <label class="opt-lbl" for="o-pickup">
+                <span class="ind-r"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Pickup Only</span>
+                  <span class="opt-desc">Customers order online and pick up in store</span>
+                </span>
+                <span class="opt-price incl">Included</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="radio" name="ord-type" id="o-deliv" value="deliv"
+                data-price="450" data-label="Own Delivery Setup">
+              <label class="opt-lbl" for="o-deliv">
+                <span class="ind-r"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Add Own Delivery</span>
+                  <span class="opt-desc">Your business handles delivery — set radius, delivery fees, and schedule</span>
+                </span>
+                <span class="opt-price">+$450</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="radio" name="ord-type" id="o-3p" value="3p"
+                data-price="350" data-label="Third-Party Delivery Integration">
+              <label class="opt-lbl" for="o-3p">
+                <span class="ind-r"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Third-Party Delivery Integration</span>
+                  <span class="opt-desc">Sync with DoorDash, UberEats, or similar platforms</span>
+                </span>
+                <span class="opt-price">+$350</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="q-lbl">Online Ordering — Extras</div>
+          <div class="opts">
+            <div class="opt">
+              <input type="checkbox" id="o-menu" data-price="200" data-label="Self-Managed Menu System">
+              <label class="opt-lbl" for="o-menu">
+                <span class="ind-c"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Self-Managed Menu System</span>
+                  <span class="opt-desc">Easy backend to update menu items, prices, photos, and availability without needing us</span>
+                </span>
+                <span class="opt-price">+$200</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ E-Commerce Extras ─ -->
+      <div id="ecom-block" class="cond">
+        <hr class="div">
+        <div class="q">
+          <div class="q-lbl">How many products will you sell?</div>
+          <div class="opts">
+
+            <div class="opt">
+              <input type="radio" name="prod-cnt" id="pc-25" value="u25"
+                data-price="0" data-label="Up to 25 Products">
+              <label class="opt-lbl" for="pc-25">
+                <span class="ind-r"></span>
+                <span class="opt-body"><span class="opt-name">Up to 25 Products</span></span>
+                <span class="opt-price incl">Included</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="radio" name="prod-cnt" id="pc-100" value="26-100"
+                data-price="400" data-label="26–100 Products">
+              <label class="opt-lbl" for="pc-100">
+                <span class="ind-r"></span>
+                <span class="opt-body"><span class="opt-name">26 – 100 Products</span></span>
+                <span class="opt-price">+$400</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="radio" name="prod-cnt" id="pc-500" value="101-500"
+                data-price="800" data-label="101–500 Products">
+              <label class="opt-lbl" for="pc-500">
+                <span class="ind-r"></span>
+                <span class="opt-body"><span class="opt-name">101 – 500 Products</span></span>
+                <span class="opt-price">+$800</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="radio" name="prod-cnt" id="pc-max" value="500+"
+                data-price="1500" data-label="500+ Products">
+              <label class="opt-lbl" for="pc-max">
+                <span class="ind-r"></span>
+                <span class="opt-body"><span class="opt-name">500+ Products</span></span>
+                <span class="opt-price">+$1,500</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="q-lbl">E-Commerce add-ons</div>
+          <div class="opts">
+
+            <div class="opt">
+              <input type="checkbox" id="ec-sync" data-price="600" data-label="Physical Store / POS Inventory Sync">
+              <label class="opt-lbl" for="ec-sync">
+                <span class="ind-c"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Physical Store / POS Inventory Sync</span>
+                  <span class="opt-desc">Connect the online store to the in-store point-of-sale system so inventory stays aligned</span>
+                </span>
+                <span class="opt-price">+$600</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="ec-cust" data-price="450" data-label="Product Customization / Personalization">
+              <label class="opt-lbl" for="ec-cust">
+                <span class="ind-c"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Product Customization / Personalization</span>
+                  <span class="opt-desc">Customers can add text, choose options, or personalize items before adding to cart</span>
+                </span>
+                <span class="opt-price">+$450</span>
+              </label>
+            </div>
+
+            <div class="opt">
+              <input type="checkbox" id="ec-sub" data-price="350" data-label="Subscription / Recurring Products">
+              <label class="opt-lbl" for="ec-sub">
+                <span class="ind-c"></span>
+                <span class="opt-body">
+                  <span class="opt-name">Subscription / Recurring Products</span>
+                  <span class="opt-desc">Allow customers to subscribe for regular deliveries or set up recurring billing</span>
+                </span>
+                <span class="opt-price">+$350</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 5. AUTOMATION ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">5</div>
+      <div>
+        <div class="sec-title">Automation & Management</div>
+        <div class="sec-desc">How much should the website run itself after launch?</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="q-hint">Think about who will manage the site day-to-day and how hands-on they want to be.</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="auto" id="au-basic" value="basic"
+              data-price="0" data-label="Basic — Manual Management">
+            <label class="opt-lbl" for="au-basic">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Basic — Manual Management</span>
+                <span class="opt-desc">Standard setup. Someone logs in and makes updates manually. Simple and straightforward.</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="auto" id="au-mod" value="mod"
+              data-price="350" data-label="Moderate Automation">
+            <label class="opt-lbl" for="au-mod">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Moderate Automation</span>
+                <span class="opt-desc">Automated email confirmations, follow-up sequences, order notifications, and basic workflows set up and running from day one.</span>
+              </span>
+              <span class="opt-price">+$350</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="auto" id="au-adv" value="adv"
+              data-price="700" data-label="Advanced Automation">
+            <label class="opt-lbl" for="au-adv">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Advanced Automation</span>
+                <span class="opt-desc">Full suite — CRM integration, automated marketing sequences, inventory alerts, reporting dashboards, and more. Minimal daily input required.</span>
+              </span>
+              <span class="opt-price">+$700</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. SETUP & TECHNICAL ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">6</div>
+      <div>
+        <div class="sec-title">Setup & Technical Services</div>
+        <div class="sec-desc">The behind-the-scenes configuration</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-lbl">Domain & Hosting</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="checkbox" id="s-dom" data-price="100" data-label="Domain Registration & Setup">
+            <label class="opt-lbl" for="s-dom">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Domain Registration & Setup</span>
+                <span class="opt-desc">Help securing the .com (or preferred extension) and pointing it to the site</span>
+              </span>
+              <span class="opt-price">+$100</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="checkbox" id="s-host" data-price="100" data-label="Hosting Setup & Configuration">
+            <label class="opt-lbl" for="s-host">
+              <span class="ind-c"></span>
+              <span class="opt-body">
+                <span class="opt-name">Hosting Setup & Configuration</span>
+                <span class="opt-desc">Set up and configure the hosting environment for performance and security</span>
+              </span>
+              <span class="opt-price">+$100</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div class="q">
+        <div class="q-lbl">Professional Email Setup</div>
+        <div class="q-hint">yourname@yourbusiness.com — looks professional and builds customer trust</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="email" id="e-none" value="none"
+              data-price="0" data-label="">
+            <label class="opt-lbl" for="e-none">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">No Email Setup Needed</span>
+                <span class="opt-desc">Already handled or not needed right now</span>
+              </span>
+              <span class="opt-price incl">N/A</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="email" id="e-basic" value="basic"
+              data-price="150" data-label="Professional Email — Up to 3 Accounts">
+            <label class="opt-lbl" for="e-basic">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Email Setup — Up to 3 Accounts</span>
+                <span class="opt-desc">Perfect for owner + a couple of team members</span>
+              </span>
+              <span class="opt-price">+$150</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="email" id="e-full" value="full"
+              data-price="250" data-label="Professional Email — Unlimited Accounts">
+            <label class="opt-lbl" for="e-full">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Email Setup — Unlimited Accounts</span>
+                <span class="opt-desc">Full team setup with unlimited business email addresses</span>
+              </span>
+              <span class="opt-price">+$250</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 7. BRANDING ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">7</div>
+      <div>
+        <div class="sec-title">Branding</div>
+        <div class="sec-desc">Do you have a brand identity ready to go?</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="brand" id="br-have" value="have"
+              data-price="0" data-label="">
+            <label class="opt-lbl" for="br-have">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">I have a logo & brand assets</span>
+                <span class="opt-desc">Ready to go — we'll apply your existing brand to the site</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="brand" id="br-logo" value="logo"
+              data-price="350" data-label="Basic Logo Design">
+            <label class="opt-lbl" for="br-logo">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Basic Logo Design</span>
+                <span class="opt-desc">A clean, professional logo for the business — 2 concept rounds included</span>
+              </span>
+              <span class="opt-price">+$350</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="brand" id="br-sys" value="sys"
+              data-price="700" data-label="Logo + Brand Color & Font System">
+            <label class="opt-lbl" for="br-sys">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Logo + Brand Color & Font System</span>
+                <span class="opt-desc">Logo design plus a defined color palette and typography system for consistent use across all channels</span>
+              </span>
+              <span class="opt-price">+$700</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="brand" id="br-full" value="full"
+              data-price="1200" data-label="Full Brand Identity Kit">
+            <label class="opt-lbl" for="br-full">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Full Brand Identity Kit</span>
+                <span class="opt-desc">Logo + colors + fonts + business card design, social media templates, and a brand guidelines document</span>
+              </span>
+              <span class="opt-price">+$1,200</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 8. SEO & MARKETING ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">8</div>
+      <div>
+        <div class="sec-title">SEO & Marketing</div>
+        <div class="sec-desc">Getting found on Google and growing beyond launch</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="q">
+        <div class="q-lbl">Search Engine Optimization — one-time setup</div>
+        <div class="q-hint">Is showing up when people Google your type of business important to you?</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="seo-setup" id="ss-basic" value="basic"
+              data-price="0" data-label="">
+            <label class="opt-lbl" for="ss-basic">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Basic SEO Setup</span>
+                <span class="opt-desc">Page titles, descriptions, and Google-ready structure — included with every site</span>
+              </span>
+              <span class="opt-price incl">Included</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="seo-setup" id="ss-enh" value="enh"
+              data-price="250" data-label="Enhanced SEO + Analytics Setup">
+            <label class="opt-lbl" for="ss-enh">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Enhanced SEO + Analytics Setup</span>
+                <span class="opt-desc">Google Analytics, Search Console, sitemap submission, local business schema markup so you show up in Maps and local searches</span>
+              </span>
+              <span class="opt-price">+$250</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="seo-setup" id="ss-full" value="full"
+              data-price="600" data-label="Full SEO Optimization Package">
+            <label class="opt-lbl" for="ss-full">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Full SEO Optimization Package</span>
+                <span class="opt-desc">Keyword research, content strategy, competitor analysis, full on-page optimization, and Google Business Profile setup</span>
+              </span>
+              <span class="opt-price">+$600</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 9. ONGOING MONTHLY ── -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-num">9</div>
+      <div>
+        <div class="sec-title">Ongoing Monthly Services</div>
+        <div class="sec-desc">Keep the site healthy and growing after launch</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="q">
+        <div class="q-lbl">Website Maintenance Retainer</div>
+        <div class="q-hint">Who's going to keep the lights on and handle updates after launch?</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="maint" id="m-none" value="none"
+              data-monthly="0" data-label="">
+            <label class="opt-lbl" for="m-none">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">No Retainer — I'll Handle It</span>
+                <span class="opt-desc">You or your team will manage updates independently</span>
+              </span>
+              <span class="opt-price incl">$0/mo</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="maint" id="m-basic" value="basic"
+              data-monthly="99" data-label="Basic Maintenance — $99/mo">
+            <label class="opt-lbl" for="m-basic">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Basic Maintenance — $99/mo</span>
+                <span class="opt-desc">Plugin / theme updates, security monitoring, monthly backups, minor text and image changes</span>
+              </span>
+              <span class="opt-price">$99/mo</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="maint" id="m-std" value="std"
+              data-monthly="199" data-label="Standard Maintenance — $199/mo">
+            <label class="opt-lbl" for="m-std">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Standard Maintenance — $199/mo</span>
+                <span class="opt-desc">Everything in Basic + up to 2 hrs of content updates monthly, performance monitoring, and priority support</span>
+              </span>
+              <span class="opt-price">$199/mo</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div class="q">
+        <div class="q-lbl">SEO Growth Retainer</div>
+        <div class="q-hint">Ongoing SEO compounds over time — the earlier you start, the faster you climb in search results.</div>
+        <div class="opts">
+
+          <div class="opt">
+            <input type="radio" name="seo-r" id="sr-none" value="none"
+              data-monthly="0" data-label="">
+            <label class="opt-lbl" for="sr-none">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">No SEO Retainer</span>
+              </span>
+              <span class="opt-price incl">$0/mo</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="seo-r" id="sr-local" value="local"
+              data-monthly="199" data-label="Local SEO — $199/mo">
+            <label class="opt-lbl" for="sr-local">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Local SEO — $199/mo</span>
+                <span class="opt-desc">Optimized to show up in local searches, Google Maps, and "near me" results in your area</span>
+              </span>
+              <span class="opt-price">$199/mo</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="seo-r" id="sr-grow" value="grow"
+              data-monthly="399" data-label="Growth SEO — $399/mo">
+            <label class="opt-lbl" for="sr-grow">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Growth SEO — $399/mo</span>
+                <span class="opt-desc">Local SEO + content creation, keyword ranking campaigns, and monthly strategy reporting</span>
+              </span>
+              <span class="opt-price">$399/mo</span>
+            </label>
+          </div>
+
+          <div class="opt">
+            <input type="radio" name="seo-r" id="sr-prem" value="prem"
+              data-monthly="599" data-label="Premium SEO — $599/mo">
+            <label class="opt-lbl" for="sr-prem">
+              <span class="ind-r"></span>
+              <span class="opt-body">
+                <span class="opt-name">Premium SEO — $599/mo</span>
+                <span class="opt-desc">Full-service: content, backlinks, competitive tracking, ads consultation, and dedicated monthly strategy sessions</span>
+              </span>
+              <span class="opt-price">$599/mo</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════ SUMMARY ════════════════ -->
+  <div class="summary" id="summary">
+
+    <div class="summary-top">
+      <div>
+        <div class="summary-title">Project Estimate</div>
+        <div class="summary-client" id="summary-client"></div>
+      </div>
+      <div style="text-align:right; opacity:.4; font-size:11px; line-height:1.4;">
+        Robin Consulting<br>
+        <span id="summary-date"></span>
+      </div>
+    </div>
+
+    <!-- Line items -->
+    <ul class="items" id="items-list">
+      <li class="item empty">Select options above to build the estimate</li>
+    </ul>
+
+    <!-- Total -->
+    <div class="total-bar">
+      <span class="total-lbl">Project Total</span>
+      <span class="total-amt" id="total-amt">$0</span>
+    </div>
+
+    <!-- Monthly -->
+    <div class="mo-bar" id="mo-bar">
+      <div class="mo-lbl">Ongoing Monthly Services</div>
+      <div class="mo-amt" id="mo-amt"></div>
+      <div class="mo-items" id="mo-items"></div>
+    </div>
+
+    <!-- Payment plans -->
+    <div class="plans">
+      <div class="plans-lbl">Payment Plan Options</div>
+      <div class="plans-grid">
+        <div class="plan">
+          <div class="plan-name">50 / 50</div>
+          <div class="plan-amt" id="pp-half">—</div>
+          <div class="plan-desc">50% now &middot; 50% on delivery</div>
+        </div>
+        <div class="plan">
+          <div class="plan-name">3-Payment</div>
+          <div class="plan-amt" id="pp-3">—</div>
+          <div class="plan-desc">40% &middot; 30% &middot; 30%</div>
+        </div>
+        <div class="plan">
+          <div class="plan-name">4-Payment</div>
+          <div class="plan-amt" id="pp-4">—</div>
+          <div class="plan-desc">25% &times; 4 payments</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-wrap">
+      <div class="notes-lbl">Meeting Notes</div>
+      <textarea class="notes-ta" placeholder="Jot down anything discussed during the meeting — special requests, timeline, follow-ups..." rows="3"></textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btns">
+      <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-ghost" onclick="copyEstimate()">Copy Summary</button>
+      <button class="btn btn-reset" onclick="resetAll()">Start Over</button>
+    </div>
+
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+  // ── Helpers ──────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  const fmt = n => '$' + n.toLocaleString('en-US');
+
+  // Set today's date in summary
+  $('summary-date').textContent = new Date().toLocaleDateString('en-US', {
+    month: 'long', day: 'numeric', year: 'numeric'
+  });
+
+  // ── Conditional blocks ────────────────────────────────────────
+  function syncConditionals(siteType) {
+    $('ord-block').classList.toggle('on', siteType === 'order');
+    $('ecom-block').classList.toggle('on', siteType === 'ecom');
+
+    // Clear inaccessible selections
+    if (siteType !== 'order') {
+      document.querySelectorAll('input[name="ord-type"]').forEach(i => i.checked = false);
+      $('o-menu').checked = false;
+    }
+    if (siteType !== 'ecom') {
+      document.querySelectorAll('input[name="prod-cnt"]').forEach(i => i.checked = false);
+      ['ec-sync','ec-cust','ec-sub'].forEach(id => { $(id).checked = false; });
+    }
+  }
+
+  // ── Calculate & render ────────────────────────────────────────
+  function calc() {
+    const oneTimeItems = [];
+    let total = 0;
+    const monthlyItems = [];
+    let monthly = 0;
+
+    // One-time radios
+    document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+      if (el.dataset.monthly !== undefined) return; // handled separately
+      const price  = parseInt(el.dataset.price || '0');
+      const label  = (el.dataset.label || '').trim();
+      if (!label) return;
+      total += price;
+      oneTimeItems.push({ label, price });
+    });
+
+    // One-time checkboxes
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
+      const price = parseInt(el.dataset.price || '0');
+      const label = (el.dataset.label || '').trim();
+      if (!label) return;
+      total += price;
+      oneTimeItems.push({ label, price });
+    });
+
+    // Monthly radios
+    document.querySelectorAll('input[type="radio"][data-monthly]:checked').forEach(el => {
+      const amt   = parseInt(el.dataset.monthly || '0');
+      const label = (el.dataset.label || '').trim();
+      if (!label || amt === 0) return;
+      monthly += amt;
+      monthlyItems.push({ label, amt });
+    });
+
+    // ── Render line items ──
+    const list = $('items-list');
+    if (oneTimeItems.length === 0) {
+      list.innerHTML = '<li class="item empty">Select options above to build the estimate</li>';
+    } else {
+      list.innerHTML = oneTimeItems.map(it =>
+        `<li class="item">
+          <span class="item-name">${it.label}</span>
+          <span class="item-price ${it.price === 0 ? 'item-incl' : ''}">
+            ${it.price === 0 ? 'included' : fmt(it.price)}
+          </span>
+        </li>`
+      ).join('');
+    }
+
+    // ── Totals ──
+    $('total-amt').textContent = fmt(total);
+    $('hdr-amt').textContent   = fmt(total);
+
+    // Animate header on change
+    const hdrAmt = document.querySelector('.hdr-price-amt');
+    hdrAmt.classList.remove('bump');
+    void hdrAmt.offsetWidth;
+    hdrAmt.classList.add('bump');
+    setTimeout(() => hdrAmt.classList.remove('bump'), 200);
+
+    // ── Monthly ──
+    const moBar = $('mo-bar');
+    if (monthly > 0) {
+      moBar.style.display = 'block';
+      $('mo-amt').textContent = fmt(monthly) + '/mo';
+      $('mo-items').innerHTML = monthlyItems.map(it =>
+        `<div class="mo-item"><span>${it.label}</span><span class="mo-item-price">${fmt(it.amt)}/mo</span></div>`
+      ).join('');
+    } else {
+      moBar.style.display = 'none';
+    }
+
+    // ── Payment plans ──
+    $('pp-half').textContent = total > 0 ? fmt(Math.ceil(total * 0.5))   : '—';
+    $('pp-3').textContent    = total > 0 ? fmt(Math.ceil(total * 0.4))   : '—';
+    $('pp-4').textContent    = total > 0 ? fmt(Math.ceil(total * 0.25))  : '—';
+
+    // ── Client name in summary ──
+    const cn = $('client-name').value.trim();
+    $('summary-client').textContent = cn ? 'Prepared for ' + cn : '';
+  }
+
+  // ── Event listeners ───────────────────────────────────────────
+  document.addEventListener('change', e => {
+    if (e.target.name === 'site-type') syncConditionals(e.target.value);
+    calc();
+  });
+
+  $('client-name').addEventListener('input', calc);
+
+  // ── Copy summary text ──────────────────────────────────────────
+  function copyEstimate() {
+    const lines = [];
+    const cn = $('client-name').value.trim();
+    lines.push('ROBIN CONSULTING — WEBSITE ESTIMATE');
+    if (cn) lines.push('Client: ' + cn);
+    lines.push('Date: ' + $('summary-date').textContent);
+    lines.push('');
+
+    document.querySelectorAll('#items-list .item:not(.empty)').forEach(li => {
+      const name  = li.querySelector('.item-name')?.textContent?.trim() || '';
+      const price = li.querySelector('.item-price')?.textContent?.trim() || '';
+      lines.push(`• ${name}: ${price}`);
+    });
+
+    lines.push('');
+    lines.push('PROJECT TOTAL: ' + $('total-amt').textContent);
+
+    const moAmt = $('mo-amt').textContent;
+    if (moAmt) lines.push('MONTHLY ONGOING: ' + moAmt);
+
+    lines.push('');
+    lines.push('PAYMENT PLAN OPTIONS:');
+    lines.push('  50/50:       ' + $('pp-half').textContent + ' now, same on delivery');
+    lines.push('  3-Payment:   ' + $('pp-3').textContent + ' down, then 30%/30%');
+    lines.push('  4-Payment:   ' + $('pp-4').textContent + ' × 4 payments');
+
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => alert('Estimate copied to clipboard!'))
+      .catch(() => alert('Copy failed — please use Print instead.'));
+  }
+
+  // ── Reset ─────────────────────────────────────────────────────
+  function resetAll() {
+    if (!confirm('Clear all selections and start over?')) return;
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.checked = false);
+    $('client-name').value = '';
+    document.querySelector('.notes-ta').value = '';
+    syncConditionals('');
+    calc();
+  }
+
+  // Initial render
+  calc();
+</script>
+</body>
+</html>
