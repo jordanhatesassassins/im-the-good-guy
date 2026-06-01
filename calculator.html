@@ -26,19 +26,15 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--cream);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
 
 /* ── HEADER ── */
-.hdr{position:sticky;top:0;z-index:200;background:var(--charcoal);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;box-shadow:0 2px 16px rgba(0,0,0,.35)}
+.hdr{position:sticky;top:0;z-index:200;background:#ffffff;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;box-shadow:0 1px 0 var(--border),0 2px 8px rgba(0,0,0,.07);border-bottom:2px solid var(--orange)}
 .hdr-brand{display:flex;align-items:center;gap:13px}
 .hdr-logo{display:flex;align-items:center;justify-content:center;flex-shrink:0}
-/* Invert wordmark to white-on-dark; preserve orange + cream fills */
-.wm-inv path{fill:white}
-.wm-inv path[fill="#FF7300"]{fill:#FF7300}
-.wm-inv path[fill="#FFF8B2"]{fill:rgba(255,248,178,.6)}
 .hdr-text{}
-.hdr-name{color:#fff;font-size:17px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
-.hdr-sub{color:rgba(255,255,255,.45);font-size:11px;margin-top:2px}
+.hdr-name{color:var(--charcoal);font-size:17px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
+.hdr-sub{color:var(--muted);font-size:11px;margin-top:2px}
 .hdr-price{text-align:right}
-.hdr-price-lbl{color:rgba(255,255,255,.45);font-size:10px;text-transform:uppercase;letter-spacing:.6px}
-.hdr-price-amt{color:var(--amber);font-size:28px;font-weight:900;display:inline-block;transition:color .2s}
+.hdr-price-lbl{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.6px}
+.hdr-price-amt{color:var(--orange);font-size:28px;font-weight:900;display:inline-block;transition:color .2s}
 
 /* ── LAYOUT ── */
 .wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px}
@@ -81,8 +77,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ind-c::after{content:'✓';color:#fff;font-size:10px;font-weight:800;display:none}
 .opt input:checked+.opt-lbl .ind-c::after{display:block}
 .opt-body{flex:1;min-width:0}
-.opt-name{font-size:13px;font-weight:600;color:var(--text)}
-.opt-desc{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.opt-name{font-size:13px;font-weight:600;color:var(--text);display:block}
+.opt-desc{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4;display:block}
 .opt-price{font-size:12.5px;font-weight:800;color:var(--rust);white-space:nowrap;padding-left:10px;flex-shrink:0}
 .opt-price.incl{color:var(--teal)}
 
@@ -116,60 +112,60 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .disc-preview{font-size:13px;font-weight:600;color:var(--teal);margin-top:10px;display:none}
 
 /* ── SUMMARY CARD ── */
-.summary{background:var(--charcoal);color:#fff;border-radius:var(--radius);padding:24px;margin-top:20px;box-shadow:var(--sh-md)}
+.summary{background:#FDFBF0;color:var(--text);border-radius:var(--radius);padding:24px;margin-top:20px;box-shadow:var(--sh-md);border:1px solid var(--border)}
 .summary-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
-.summary-title{font-size:17px;font-weight:800}
-.summary-client{font-size:12px;opacity:.5;margin-top:3px}
-.summary-meta{text-align:right;font-size:11px;opacity:.35;line-height:1.5}
+.summary-title{font-size:17px;font-weight:800;color:var(--charcoal)}
+.summary-client{font-size:12px;color:var(--copper);margin-top:3px;font-weight:600}
+.summary-meta{text-align:right;font-size:11px;color:var(--muted);line-height:1.5}
 
 /* ── LINE ITEMS ── */
 .items{list-style:none}
-.item{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+.item{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
 .item:last-child{border-bottom:none}
-.item-name{opacity:.82;flex:1}
-.item-price{font-weight:700;color:var(--orange);white-space:nowrap}
-.item-price.item-incl{color:#6ECFBF;font-size:11px}
-.item-price.item-discount{color:#F87171}
-.empty-msg{opacity:.35;font-style:italic;font-size:13px;padding:6px 0}
-.cat-row{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.35;padding-top:14px;padding-bottom:2px;font-weight:700}
+.item-name{color:var(--text);flex:1}
+.item-price{font-weight:700;color:var(--rust);white-space:nowrap}
+.item-price.item-incl{color:var(--teal);font-size:11px}
+.item-price.item-discount{color:var(--rust)}
+.empty-msg{color:var(--muted);font-style:italic;font-size:13px;padding:6px 0}
+.cat-row{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding-top:14px;padding-bottom:2px;font-weight:700}
 
 /* ── TOTAL ── */
-.total-bar{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:2px solid rgba(255,255,255,.18)}
-.total-lbl{font-size:14px;font-weight:700}
+.total-bar{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:2px solid var(--border)}
+.total-lbl{font-size:14px;font-weight:700;color:var(--charcoal)}
 .total-amt{font-size:34px;font-weight:900;color:var(--orange);line-height:1}
-.subtotal-row{display:flex;justify-content:space-between;font-size:12px;opacity:.55;margin-top:6px}
+.subtotal-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
 
 /* ── MONTHLY ── */
-.mo-bar{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);display:none}
-.mo-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.4;margin-bottom:4px}
-.mo-amt{font-size:20px;font-weight:800;color:#6ECFBF}
+.mo-bar{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:none}
+.mo-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;font-weight:700}
+.mo-amt{font-size:20px;font-weight:800;color:var(--teal)}
 .mo-items{margin-top:5px}
-.mo-item{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;opacity:.75}
-.mo-item-price{color:#6ECFBF;font-weight:600}
+.mo-item{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--muted)}
+.mo-item-price{color:var(--teal);font-weight:700}
 
 /* ── PAYMENT PLANS ── */
 .plans{margin-top:20px}
-.plans-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.4;margin-bottom:10px;font-weight:700}
+.plans-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px;font-weight:700}
 .plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.plan{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 10px;text-align:center}
-.plan-name{font-size:9.5px;font-weight:700;opacity:.45;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}
-.plan-amt{font-size:18px;font-weight:900;color:var(--amber);}
-.plan-desc{font-size:10px;opacity:.45;margin-top:5px;line-height:1.4}
+.plan{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;box-shadow:var(--sh)}
+.plan-name{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}
+.plan-amt{font-size:18px;font-weight:900;color:var(--orange);}
+.plan-desc{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
 .plan-custom-inputs{margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end}
 .plan-custom-inputs.hidden{display:none}
-.cinput-lbl{font-size:10px;opacity:.45;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;font-weight:700}
-.cinput{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:7px;color:#fff;font-size:13px;font-weight:600;padding:7px 10px;outline:none;font-family:inherit}
-.cinput:focus{border-color:rgba(255,255,255,.4)}
-.cinput::placeholder{color:rgba(255,255,255,.2);font-weight:400}
-.custom-toggle-row{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:12px;opacity:.6;cursor:pointer;user-select:none}
+.cinput-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;font-weight:700}
+.cinput{width:100%;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;font-weight:600;padding:7px 10px;outline:none;font-family:inherit;box-shadow:var(--sh)}
+.cinput:focus{border-color:var(--orange)}
+.cinput::placeholder{color:#b0a890;font-weight:400}
+.custom-toggle-row{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
 .custom-toggle-row input{accent-color:var(--orange);width:14px;height:14px;cursor:pointer}
 
 /* ── NOTES ── */
 .notes-wrap{margin-top:18px}
-.notes-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.4;margin-bottom:7px;font-weight:700}
-.notes-ta{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:rgba(255,255,255,.85);font-size:13px;padding:10px 13px;resize:vertical;min-height:68px;font-family:inherit;outline:none}
-.notes-ta::placeholder{color:rgba(255,255,255,.22)}
-.notes-ta:focus{border-color:rgba(255,255,255,.3)}
+.notes-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px;font-weight:700}
+.notes-ta{width:100%;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:10px 13px;resize:vertical;min-height:68px;font-family:inherit;outline:none;box-shadow:var(--sh)}
+.notes-ta::placeholder{color:#b0a890}
+.notes-ta:focus{border-color:var(--orange)}
 
 /* ── BUTTONS ── */
 .btns{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
@@ -207,7 +203,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="hdr-brand">
     <div class="hdr-logo">
       <!-- Robin wordmark — colors inverted white via .wm-inv CSS class -->
-      <svg class="wm-inv" width="116" height="41" viewBox="0 0 447 158" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="116" height="41" viewBox="0 0 447 158" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M254.012 101.231C254.012 104.59 254.852 107.032 256.531 108.555C258.25 110.039 260.848 110.957 264.324 111.309C264.324 111.895 264.305 112.481 264.265 113.067C264.226 113.653 264.207 114.043 264.207 114.238H234.032L233.974 112.364C233.974 111.739 233.993 111.309 234.032 111.075C236.298 110.528 237.997 110.039 239.13 109.61C240.302 109.18 241.259 108.477 242.001 107.5C242.743 106.524 243.114 105.157 243.114 103.399V71.6427C242.645 70.7443 241.727 69.9435 240.36 69.2404C238.993 68.4983 237.548 67.8928 236.025 67.4241C234.54 66.9163 233.798 66.682 233.798 66.721L233.974 64.7289L249.969 60.7447L253.543 60.5104L254.188 70.0021C256.336 67.1116 259.07 64.7289 262.391 62.854C265.75 60.94 269.363 59.983 273.23 59.983C278.894 59.983 283.288 61.5845 286.413 64.7875C289.538 67.9905 291.237 72.7754 291.51 79.1423C291.628 81.6422 291.686 84.2007 291.686 86.8178V99.8836C291.686 102.735 291.862 104.805 292.213 106.094C292.565 107.383 293.112 108.282 293.854 108.789C294.635 109.258 295.924 109.766 297.721 110.313L300.182 111.075C300.221 111.309 300.24 111.739 300.24 112.364L300.182 114.238H271.296C271.296 114.004 271.277 113.613 271.238 113.067C271.199 112.481 271.179 111.895 271.179 111.309C271.453 111.192 272.234 110.957 273.523 110.606C275.593 110.02 277.195 109.395 278.327 108.731C279.499 108.067 280.202 106.993 280.437 105.508C280.632 104.376 280.73 102.872 280.73 100.997V87.931C280.73 82.7359 280.534 78.7322 280.144 75.9198C279.792 73.1075 278.816 70.8029 277.214 69.0061C275.652 67.2093 273.113 66.3109 269.597 66.3109C266.824 66.3109 264.148 67.1116 261.57 68.7131C259.031 70.3146 256.512 72.4434 254.012 75.0996V101.231Z" fill="#232323"/>
 <path d="M218.618 33.6169C220.493 33.6169 222.095 34.281 223.423 35.609C224.751 36.9371 225.415 38.5386 225.415 40.4135C225.415 42.3275 224.751 43.9485 223.423 45.2766C222.095 46.5656 220.493 47.2101 218.618 47.2101C216.704 47.2101 215.083 46.5656 213.755 45.2766C212.466 43.9485 211.822 42.3275 211.822 40.4135C211.822 38.5386 212.466 36.9371 213.755 35.609C215.083 34.281 216.704 33.6169 218.618 33.6169ZM213.931 71.6426C213.423 70.7442 212.466 69.9435 211.06 69.2404C209.693 68.4982 208.267 67.8928 206.783 67.424C205.338 66.9163 204.615 66.6819 204.615 66.7209L204.732 64.6703L221.196 60.6861L224.829 60.4517V101.348C224.829 102.715 224.966 104.004 225.239 105.215C225.552 106.426 226.45 107.657 227.934 108.907C229.458 110.157 231.84 110.957 235.082 111.309C235.082 112.598 235.063 113.574 235.024 114.238H204.439C204.361 113.535 204.322 112.559 204.322 111.309L205.963 110.84C207.681 110.371 209.068 109.903 210.123 109.434C211.177 108.965 212.076 108.282 212.818 107.383C213.56 106.446 213.931 105.196 213.931 103.633V71.6426Z" fill="#232323"/>
 <path d="M149.065 46.0969C148.597 45.3156 147.542 44.5344 145.902 43.7532C144.261 42.972 142.659 42.308 141.097 41.7611C139.535 41.2143 138.519 40.8822 138.05 40.7651L138.167 38.773L154.925 34.1443L159.963 33.6169V69.8263C166.057 63.2641 172.56 59.983 179.474 59.983C183.888 59.983 187.755 61.2915 191.075 63.9086C194.435 66.4866 196.993 69.8653 198.751 74.0448C200.548 78.2243 201.446 82.5992 201.446 87.1693C201.446 93.9268 199.962 99.4148 196.993 103.633C194.063 107.852 190.294 110.879 185.685 112.715C181.076 114.512 176.095 115.41 170.744 115.41C167.072 115.41 163.557 115.02 160.198 114.238C156.878 113.418 154.182 112.324 152.112 110.957C150.081 109.551 149.065 108.028 149.065 106.387V46.0969ZM159.963 106.973C159.963 108.106 161.077 109.043 163.303 109.785C165.53 110.489 168.205 110.84 171.33 110.84C174.611 110.84 177.697 110.157 180.587 108.789C183.478 107.422 185.861 105.118 187.736 101.876C189.611 98.6336 190.548 94.3955 190.548 89.1614C190.548 84.9037 189.903 81.1734 188.614 77.9705C187.365 74.7284 185.548 72.209 183.165 70.4122C180.822 68.6154 178.068 67.717 174.904 67.717C172.092 67.717 169.338 68.4396 166.643 69.8849C163.948 71.3301 161.721 73.1269 159.963 75.2753V106.973Z" fill="#232323"/>
@@ -1122,9 +1118,9 @@ function calc() {
   }
 
   // ── Payment plans ──
-  renderPlan($('plan-5050'), computeAmounts(total,[0.5,0.5]),          ['50%','50%']);
-  renderPlan($('plan-3pay'), computeAmounts(total,[0.4,0.3,0.3]),      ['40%','30%','30%']);
-  renderPlan($('plan-6pay'), computeAmounts(total,[1/6,1/6,1/6,1/6,1/6,1/6]), ['1/6','1/6','1/6','1/6','1/6','1/6']);
+  renderPlan($('plan-5050'), computeAmounts(total,[0.5,0.5]),                          ['50%','50%']);
+  renderPlan($('plan-3pay'), computeAmounts(total,[0.5,0.25,0.25]),                    ['50%','25%','25%']);
+  renderPlan($('plan-6pay'), computeAmounts(total,[0.5,0.1,0.1,0.1,0.1,0.1]),         ['50%','10%','10%','10%','10%','10%']);
 
   // Custom plan
   const nPay    = Math.max(1, parseInt($('c-payments').value) || 4);
@@ -1224,9 +1220,9 @@ function printSummary() {
   .page{max-width:7in;margin:0 auto}
 
   /* Header */
-  .print-header{background:#1A1A1A;color:#fff;padding:16px 22px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .print-header{background:#ffffff;color:#1A1A1A;padding:16px 22px;border-radius:8px;border:1.5px solid #E3DFC4;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
   .print-logo{display:flex;align-items:center;gap:0}
-  .print-meta{text-align:right;font-size:9pt;line-height:1.6;opacity:.55}
+  .print-meta{text-align:right;font-size:9pt;line-height:1.6;color:#6B6060}
 
   /* Client block */
   .client-block{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid #E8E5D0}
@@ -1251,8 +1247,8 @@ function printSummary() {
   .mo-total-row{text-align:right;font-size:10pt;margin-top:6px;color:#2B8373;font-weight:700}
 
   /* Total */
-  .total-block{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:14px 18px;background:#1A1A1A;color:#fff;border-radius:8px}
-  .total-lbl{font-size:11pt;font-weight:700}
+  .total-block{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:14px 18px;background:#FDFBF0;color:#1A1A1A;border-radius:8px;border:1.5px solid #E3DFC4}
+  .total-lbl{font-size:11pt;font-weight:700;color:#1A1A1A}
   .total-num{font-size:22pt;font-weight:900;color:#FF7300}
 
   /* Plans table */
@@ -1279,7 +1275,6 @@ function printSummary() {
     <div class="print-logo">
       <!-- Wordmark with dark paths → white via inline override -->
       <svg width="130" height="46" viewBox="0 0 447 158" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
-        <style>path{fill:white} path[fill="#FF7300"]{fill:#FF7300} path[fill="#FFF8B2"]{fill:rgba(255,248,178,.55)}</style>
         <path d="M254.012 101.231C254.012 104.59 254.852 107.032 256.531 108.555C258.25 110.039 260.848 110.957 264.324 111.309C264.324 111.895 264.305 112.481 264.265 113.067C264.226 113.653 264.207 114.043 264.207 114.238H234.032L233.974 112.364C233.974 111.739 233.993 111.309 234.032 111.075C236.298 110.528 237.997 110.039 239.13 109.61C240.302 109.18 241.259 108.477 242.001 107.5C242.743 106.524 243.114 105.157 243.114 103.399V71.6427C242.645 70.7443 241.727 69.9435 240.36 69.2404C238.993 68.4983 237.548 67.8928 236.025 67.4241C234.54 66.9163 233.798 66.682 233.798 66.721L233.974 64.7289L249.969 60.7447L253.543 60.5104L254.188 70.0021C256.336 67.1116 259.07 64.7289 262.391 62.854C265.75 60.94 269.363 59.983 273.23 59.983C278.894 59.983 283.288 61.5845 286.413 64.7875C289.538 67.9905 291.237 72.7754 291.51 79.1423C291.628 81.6422 291.686 84.2007 291.686 86.8178V99.8836C291.686 102.735 291.862 104.805 292.213 106.094C292.565 107.383 293.112 108.282 293.854 108.789C294.635 109.258 295.924 109.766 297.721 110.313L300.182 111.075C300.221 111.309 300.24 111.739 300.24 112.364L300.182 114.238H271.296C271.296 114.004 271.277 113.613 271.238 113.067C271.199 112.481 271.179 111.895 271.179 111.309C271.453 111.192 272.234 110.957 273.523 110.606C275.593 110.02 277.195 109.395 278.327 108.731C279.499 108.067 280.202 106.993 280.437 105.508C280.632 104.376 280.73 102.872 280.73 100.997V87.931C280.73 82.7359 280.534 78.7322 280.144 75.9198C279.792 73.1075 278.816 70.8029 277.214 69.0061C275.652 67.2093 273.113 66.3109 269.597 66.3109C266.824 66.3109 264.148 67.1116 261.57 68.7131C259.031 70.3146 256.512 72.4434 254.012 75.0996V101.231Z" fill="#232323"/>
         <path d="M218.618 33.6169C220.493 33.6169 222.095 34.281 223.423 35.609C224.751 36.9371 225.415 38.5386 225.415 40.4135C225.415 42.3275 224.751 43.9485 223.423 45.2766C222.095 46.5656 220.493 47.2101 218.618 47.2101C216.704 47.2101 215.083 46.5656 213.755 45.2766C212.466 43.9485 211.822 42.3275 211.822 40.4135C211.822 38.5386 212.466 36.9371 213.755 35.609C215.083 34.281 216.704 33.6169 218.618 33.6169ZM213.931 71.6426C213.423 70.7442 212.466 69.9435 211.06 69.2404C209.693 68.4982 208.267 67.8928 206.783 67.424C205.338 66.9163 204.615 66.6819 204.615 66.7209L204.732 64.6703L221.196 60.6861L224.829 60.4517V101.348C224.829 102.715 224.966 104.004 225.239 105.215C225.552 106.426 226.45 107.657 227.934 108.907C229.458 110.157 231.84 110.957 235.082 111.309C235.082 112.598 235.063 113.574 235.024 114.238H204.439C204.361 113.535 204.322 112.559 204.322 111.309L205.963 110.84C207.681 110.371 209.068 109.903 210.123 109.434C211.177 108.965 212.076 108.282 212.818 107.383C213.56 106.446 213.931 105.196 213.931 103.633V71.6426Z" fill="#232323"/>
         <path d="M149.065 46.0969C148.597 45.3156 147.542 44.5344 145.902 43.7532C144.261 42.972 142.659 42.308 141.097 41.7611C139.535 41.2143 138.519 40.8822 138.05 40.7651L138.167 38.773L154.925 34.1443L159.963 33.6169V69.8263C166.057 63.2641 172.56 59.983 179.474 59.983C183.888 59.983 187.755 61.2915 191.075 63.9086C194.435 66.4866 196.993 69.8653 198.751 74.0448C200.548 78.2243 201.446 82.5992 201.446 87.1693C201.446 93.9268 199.962 99.4148 196.993 103.633C194.063 107.852 190.294 110.879 185.685 112.715C181.076 114.512 176.095 115.41 170.744 115.41C167.072 115.41 163.557 115.02 160.198 114.238C156.878 113.418 154.182 112.324 152.112 110.957C150.081 109.551 149.065 108.028 149.065 106.387V46.0969ZM159.963 106.973C159.963 108.106 161.077 109.043 163.303 109.785C165.53 110.489 168.205 110.84 171.33 110.84C174.611 110.84 177.697 110.157 180.587 108.789C183.478 107.422 185.861 105.118 187.736 101.876C189.611 98.6336 190.548 94.3955 190.548 89.1614C190.548 84.9037 189.903 81.1734 188.614 77.9705C187.365 74.7284 185.548 72.209 183.165 70.4122C180.822 68.6154 178.068 67.717 174.904 67.717C172.092 67.717 169.338 68.4396 166.643 69.8849C163.948 71.3301 161.721 73.1269 159.963 75.2753V106.973Z" fill="#232323"/>
