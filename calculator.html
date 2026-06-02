@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Robin Consulting — Website Cost Calculator</title>
+<title>Robin — Website Cost Calculator</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -823,7 +823,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="summary-client" id="summary-client"></div>
     </div>
     <div class="summary-meta">
-      Robin Consulting<br>
+      Robin<br>
       <span id="summary-date"></span>
     </div>
   </div>
@@ -1212,7 +1212,7 @@ function printSummary() {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Robin Consulting — Website Estimate${cn ? ' for ' + cn : ''}</title>
+<title>Robin — Website Estimate${cn ? ' for ' + cn : ''}</title>
 <style>
   @page{size:letter portrait;margin:0.65in 0.75in}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -1298,7 +1298,7 @@ function printSummary() {
   <div class="client-block">
     <div>
       <div class="client-name">${cn || 'Website Project Estimate'}</div>
-      <div class="client-sub">Prepared by Robin Consulting</div>
+      <div class="client-sub">Prepared by Robin</div>
     </div>
     <div class="estimate-tag">Estimate</div>
   </div>
@@ -1331,7 +1331,7 @@ function printSummary() {
   ${notesSection}
 
   <div class="footer">
-    <span>Robin Consulting &middot; soarwithrobin.com</span>
+    <span>Robin for Small Business LLC &middot; soarwithrobin.com</span>
     <span>Estimate valid for 30 days &middot; Rates based on $75/hr</span>
   </div>
 
@@ -1349,7 +1349,7 @@ function printSummary() {
 function copyEstimate() {
   const s = window._calcState || {};
   const cn = $('client-name').value.trim();
-  const lines = ['ROBIN CONSULTING — WEBSITE ESTIMATE'];
+  const lines = ['ROBIN — WEBSITE ESTIMATE'];
   if (cn) lines.push('Client: ' + cn);
   lines.push('Date: ' + $('summary-date').textContent, '');
   (s.oneTimeItems||[]).forEach(it => lines.push(`• ${it.label}: ${it.price===0?'included':fmt(it.price)}`));
